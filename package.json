@@ -1,0 +1,41 @@
+{
+  "name": "izzy",
+  "version": "0.1.1",
+  "description": "A micro library for naive type checking",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eighttrackmind/izzy.git"
+  },
+  "author": "Boris Cherny <boris@performancejs.com>",
+  "contributors": [
+    {
+      "name": "Boris Cherny",
+      "email": "boris@performancejs.com"
+    }
+  ],
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.4",
+    "grunt-contrib-coffee": "~0.7.0",
+    "nodeunit": "~0.8.1"
+  },
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "dependencies": {},
+  "scripts": {
+    "test": "./node_modules/.bin/nodeunit test"
+  },
+  "keywords": [
+    "is",
+    "type",
+    "typeof",
+    "type check",
+    "string",
+    "number",
+    "defined",
+    "array",
+    "object",
+    "boolean",
+    "primitive"
+  ]
+}
