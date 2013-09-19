@@ -1,30 +1,39 @@
-# izzy
+# tranny
 
-A micro library for naive type checking
+* Pre-alpha - not yet functional*
+
+A little library for converting compound CSS transforms into their matrix equivalents.
 
 ## usage
 
 ```js
-> izzy.string ('foo')
-// > true
+tranny = new Tranny();
 
-// or, equivalently:
-> izzy ('string', 42)
-// > false
+tranny
+
+// parse a CSS string
+.parse('skew(1.5rad) scale(0.5, 0.7)')
+
+// set some transforms
+.rotate('90deg')
+.translate3d(50, 100, 200);
+
+// get a matrix back
+tranny.getMatrix()
+
+/*
+	[
+		[9.870993963020204, 0.7, 0, 0],
+		[-0.4999999999999994, 0.00000000000000004286263797015736, 0, 0],
+		[0, 0, 1, 0],
+		[443.54969815101026, 35.00000000000001, 200, 1]
+	]
+*/
+
+// .. or as a CSS property
+tranny.getMatrixCSS()
+
+/*
+	"matrix3d(9.870993963020204, 0.7, 0, 0, -0.4999999999999994, 0.00000000000000004286263797015736, 0, 0, 0, 0, 1, 0, 443.54969815101026, 35.00000000000001, 200, 1)"
+*/
 ```
-
-## supported checks
-
-array, boolean, defined, function, null, number, object, string
-
-## size
-
-|						|				|
-|-----------------------|---------------|
-| Raw					| 1283 bytes	|
-| Uglified				| 681 bytes		|
-| Uglified + gzipped	| 313 bytes		|
-
-## environment support
-
-Any browser (as `window.izzy`), AMD, CommonJS, NodeJS

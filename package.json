@@ -1,10 +1,10 @@
 {
-  "name": "izzy",
-  "version": "0.1.1",
-  "description": "A micro library for naive type checking",
+  "name": "tranny",
+  "version": "0.0.1",
+  "description": "A little library for converting compound CSS transforms into their matrix equivalents",
   "repository": {
     "type": "git",
-    "url": "https://github.com/eighttrackmind/izzy.git"
+    "url": "https://github.com/eighttrackmind/tranny.git"
   },
   "author": "Boris Cherny <boris@performancejs.com>",
   "contributors": [
@@ -25,17 +25,5 @@
   "scripts": {
     "test": "./node_modules/.bin/nodeunit test"
   },
-  "keywords": [
-    "is",
-    "type",
-    "typeof",
-    "type check",
-    "string",
-    "number",
-    "defined",
-    "array",
-    "object",
-    "boolean",
-    "primitive"
-  ]
+  "keywords": []
 }

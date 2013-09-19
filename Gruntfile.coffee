@@ -6,7 +6,7 @@ module.exports = (grunt) ->
 
 			compile:
 				files:
-					'izzy.js': 'izzy.coffee'
+					'tranny.js': 'tranny.coffee'
 
 		uglify:
 
@@ -21,8 +21,8 @@ module.exports = (grunt) ->
 
 			standard:
 				files:
-					'izzy.min.js': [
-						'izzy.js'
+					'tranny.min.js': [
+						'tranny.js'
 					]
 
 

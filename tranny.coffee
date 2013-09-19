@@ -14,10 +14,11 @@ extend = (a, b) ->
 		a[key] = b[key]
 	a
 
+# matrix
 Matrix = (data) ->
-
 	@setData data
 
+# methods
 extend Matrix.prototype,
 
 	_data: []
@@ -44,30 +45,47 @@ extend Matrix.prototype,
 
 	apply: ->
 
+		data = @_data
+		transformations = @_transformations
+
 		# translate
-		@_data[3][0] = @_transformations.translate.x
-		@_data[3][1] = @_transformations.translate.y
-		@_data[3][2] = @_transformations.translate.z
+		tx = transformations.translate.x
+		ty = transformations.translate.y
+
+		data[3][0] = tx
+		data[3][1] = ty
+		data[3][2] = transformations.translate.z
 
 		# rotate (see http://inside.mines.edu/~gmurray/ArbitraryAxisRotation/)
-		u = @_transformations.rotate.x
-		v = @_transformations.rotate.y
-		w = @_transformations.rotate.z
-		a = @_transformations.rotate.a
+		u = transformations.rotate.x
+		v = transformations.rotate.y
+		w = transformations.rotate.z
+		a = transformations.rotate.a
 		s = u*u + v*v + w*w
 		c = Math.cos a
 		i = 1 - c
 		rs = Math.sqrt(s)*Math.sin(a)
 
-		@_data[0][0] *= (u*u + (v*v + w*w)*c)/s
-		@_data[1][0] *= (u*v*i - w*rs)/s
-		@_data[2][0] *= (u*w*i + v*rs)/s
-		@_data[0][1] *= (u*v*i + w*rs)/s
-		@_data[1][1] *= (v*v + (u*u + w*w)*c)/s
-		@_data[2][1] *= (v*w*i - u*rs)/s
-		@_data[0][2] *= (u*w*i - v*rs)/s
-		@_data[1][2] *= (v*w*i + u*rs)/s
-		@_data[2][2] *= (w*w + (u*u + v*v)*c)/s
+		data[0][0] *= (u*u + (v*v + w*w)*c)/s
+		data[1][0] *= (u*v*i - w*rs)/s
+		data[2][0] *= (u*w*i + v*rs)/s
+		data[0][1] *= (u*v*i + w*rs)/s
+		data[1][1] *= (v*v + (u*u + w*w)*c)/s
+		data[2][1] *= (v*w*i - u*rs)/s
+		data[0][2] *= (u*w*i - v*rs)/s
+		data[1][2] *= (v*w*i + u*rs)/s
+		data[2][2] *= (w*w + (u*u + v*v)*c)/s
+
+		# skew
+		sx = Math.tan transformations.skew.x
+		sy = Math.tan transformations.skew.y
+
+		data[0][1] *= sy
+		data[3][0] += ty*sx
+		data[3][1] += tx*sy
+
+		# scale
+
 
 
 	rotate: (a) -> @rotateZ a
