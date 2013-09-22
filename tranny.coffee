@@ -141,7 +141,7 @@ extend Matrix.prototype,
 			matrix[1][2] = (v*w*i + u*rs)/s
 			matrix[2][2] = (w*w + (u*u + v*v)*c)/s
 
-			# dot with transform
+			# dot with transform (see http://dev.opera.com/articles/view/understanding-the-css-transforms-matrix/, figure 13)
 			matrix[3][0] *= c - n
 			matrix[3][1] *= c + n
 
@@ -149,13 +149,21 @@ extend Matrix.prototype,
 		skew = transformations.skew
 
 		if skew.x
-			sx = Math.tan skew.x
-			matrix[3][0] += translate.y*sx
+			tx = Math.tan skew.x
+			matrix[0][1] = tx
+			# matrix[1][0] *= 1 + tx
+			# matrix[1][1] *= 1 + tx
+			# matrix[1][2] *= 1 + tx
+			# matrix[1][3] *= 1 + tx
 
 		if skew.y
-			sy = Math.tan skew.y
-			matrix[0][1] *= sy
-			matrix[3][1] += translate.x*sy
+			ty = Math.tan skew.y
+			matrix[0][2] = ty
+			matrix[1][0] = ty
+			# matrix[0][0] *= 1 + ty
+			# matrix[0][1] *= 1 + ty
+			# matrix[0][2] *= 1 + ty
+			# matrix[0][3] *= 1 + ty
 
 		# scale
 		scale = transformations.scale
@@ -175,7 +183,7 @@ extend Matrix.prototype,
 	scaleY: fluent (y = 1) -> @_data.transformations.scale.y = y
 	scaleZ: fluent (z = 1) -> @_data.transformations.scale.z = z
 	skewX: (x) -> @skew x
-	skewY: fluent (y = 0) -> @_data.transformations.skew.y = y
+	skewY: (y) -> @skew null, y
 	translate: (x, y) -> @translate3d x, y
 	translateX: (x) -> @translate3d x
 	translateY: fluent (y = 0) -> @_data.transformations.translate.y = y
@@ -228,14 +236,10 @@ extend Matrix.prototype,
 			y: y
 			z: z
 
-	skew: fluent (x = 0, y = 0) ->
+	skew: fluent (x, y) ->
 
-		x = rad x
-		y = rad y
-
-		@_data.transformations.skew =
-			x: x
-			y: y
+		if x? then @_data.transformations.skew.x = rad x
+		if y? then @_data.transformations.skew.y = rad y
 
 	translate3d: fluent (x = 0, y = 0, z = 0) ->
 

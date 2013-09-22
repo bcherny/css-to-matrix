@@ -108,7 +108,7 @@
       return 'matrix3d(' + css.join(',') + ')';
     },
     apply: function() {
-      var a, c, data, i, matrix, n, perspective, rotate, rs, s, scale, skew, sx, sy, transformations, translate, u, v, w;
+      var a, c, data, i, matrix, n, perspective, rotate, rs, s, scale, skew, transformations, translate, tx, ty, u, v, w;
       data = this._data;
       matrix = data.matrix;
       transformations = data.transformations;
@@ -143,13 +143,13 @@
       }
       skew = transformations.skew;
       if (skew.x) {
-        sx = Math.tan(skew.x);
-        matrix[3][0] += translate.y * sx;
+        tx = Math.tan(skew.x);
+        matrix[0][1] = tx;
       }
       if (skew.y) {
-        sy = Math.tan(skew.y);
-        matrix[0][1] *= sy;
-        matrix[3][1] += translate.x * sy;
+        ty = Math.tan(skew.y);
+        matrix[0][2] = ty;
+        matrix[1][0] = ty;
       }
       scale = transformations.scale;
       matrix[0][0] *= scale.x;
@@ -190,12 +190,9 @@
     skewX: function(x) {
       return this.skew(x);
     },
-    skewY: fluent(function(y) {
-      if (y == null) {
-        y = 0;
-      }
-      return this._data.transformations.skew.y = y;
-    }),
+    skewY: function(y) {
+      return this.skew(null, y);
+    },
     translate: function(x, y) {
       return this.translate3d(x, y);
     },
@@ -280,18 +277,12 @@
       };
     }),
     skew: fluent(function(x, y) {
-      if (x == null) {
-        x = 0;
+      if (x != null) {
+        this._data.transformations.skew.x = rad(x);
       }
-      if (y == null) {
-        y = 0;
+      if (y != null) {
+        return this._data.transformations.skew.y = rad(y);
       }
-      x = rad(x);
-      y = rad(y);
-      return this._data.transformations.skew = {
-        x: x,
-        y: y
-      };
     }),
     translate3d: fluent(function(x, y, z) {
       if (x == null) {
