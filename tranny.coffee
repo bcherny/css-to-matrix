@@ -9,6 +9,18 @@ umd = (factory) ->
 		@Tranny = factory
 
 # helpers
+rad = (a) ->
+	if not (a < Infinity)
+
+		_a = parseFloat a, 10
+
+		# convert deg -> rad?
+		if a.indexOf 'deg' > -1
+			_a *= Math.PI / 180
+
+		a = _a
+	a
+
 copy = (array) ->
 	array.slice()
 
@@ -63,13 +75,13 @@ extend Matrix.prototype,
 
 		#DEV
 		if data.length is undefined
-			throw new TypeError 'expected parameter `data` to be an Array, passed ' + typeof data
+			throw new TypeError 'expected parameter `data` to be an Array, but was given a ' + typeof data
 
 		rows = data.length
 		columns = if rows[0] then rows[0].length else 0
 
 		if rows isnt 4 or columns isnt 4
-			throw new Error 'expected parameter `data` to be a 4x4 matrix of arrays, passed ' + rows + 'x' + columns + ' matrix'
+			throw new Error 'expected parameter `data` to be a 4x4 matrix of arrays, but was given a ' + rows + 'x' + columns + ' matrix'
 		#END DEV
 
 		@setData data
@@ -106,33 +118,44 @@ extend Matrix.prototype,
 		matrix[3][1] = translate.y
 		matrix[3][2] = translate.z
 
-		# skew
-		skew = transformations.skew
-		sx = Math.tan skew.x
-		sy = Math.tan skew.y
-		matrix[0][1] *= sy
-		matrix[3][0] += translate.y*sx
-		matrix[3][1] += translate.x*sy
-
-		# rotate (see http://inside.mines.edu/~gmurray/ArbitraryAxisRotation/)
+		# rotate (see http://inside.mines.edu/~gmurray/ArbitraryAxisRotation/, section 5.1)
 		rotate = transformations.rotate
 		u = rotate.x
 		v = rotate.y
 		w = rotate.z
 		a = rotate.a
-		s = u*u + v*v + w*w
-		c = Math.cos a
-		i = 1 - c
-		rs = Math.sqrt(s)*Math.sin(a)
-		matrix[0][0] = (u*u + (v*v + w*w)*c)/s
-		matrix[1][0] = (u*v*i - w*rs)/s
-		matrix[2][0] = (u*w*i + v*rs)/s
-		matrix[0][1] = (u*v*i + w*rs)/s
-		matrix[1][1] = (v*v + (u*u + w*w)*c)/s
-		matrix[2][1] = (v*w*i - u*rs)/s
-		matrix[0][2] = (u*w*i - v*rs)/s
-		matrix[1][2] = (v*w*i + u*rs)/s
-		matrix[2][2] = (w*w + (u*u + v*v)*c)/s
+
+		if u or v or w or a
+			s = u*u + v*v + w*w
+			c = Math.cos a
+			n = Math.sin(a)
+			i = 1 - c
+			rs = Math.sqrt(s)*n
+			matrix[0][0] = (u*u + (v*v + w*w)*c)/s
+			matrix[1][0] = (u*v*i - w*rs)/s
+			matrix[2][0] = (u*w*i + v*rs)/s
+			matrix[0][1] = (u*v*i + w*rs)/s
+			matrix[1][1] = (v*v + (u*u + w*w)*c)/s
+			matrix[2][1] = (v*w*i - u*rs)/s
+			matrix[0][2] = (u*w*i - v*rs)/s
+			matrix[1][2] = (v*w*i + u*rs)/s
+			matrix[2][2] = (w*w + (u*u + v*v)*c)/s
+
+			# dot with transform
+			matrix[3][0] *= c - n
+			matrix[3][1] *= c + n
+
+		# skew
+		skew = transformations.skew
+
+		if skew.x
+			sx = Math.tan skew.x
+			matrix[3][0] += translate.y*sx
+
+		if skew.y
+			sy = Math.tan skew.y
+			matrix[0][1] *= sy
+			matrix[3][1] += translate.x*sy
 
 		# scale
 		scale = transformations.scale
@@ -162,7 +185,7 @@ extend Matrix.prototype,
 
 		#DEV
 		if not (x < Infinity)
-			throw new TypeError 'expected parameter `x` to be a Number, passed ' + typeof x
+			throw new TypeError 'expected parameter `x` to be a Number, but was given a ' + typeof x
 		#END DEV
 
 		@_data.transformations.perspective = x
@@ -171,23 +194,17 @@ extend Matrix.prototype,
 
 		#DEV
 		if not (x < Infinity)
-			throw new TypeError 'expected parameter `x` to be a Number, passed ' + typeof x
+			throw new TypeError 'expected parameter `x` to be a Number, but was given a ' + typeof x
 		if not (y < Infinity)
-			throw new TypeError 'expected parameter `y` to be a Number, passed ' + typeof y
+			throw new TypeError 'expected parameter `y` to be a Number, but was given a ' + typeof y
 		if not (z < Infinity)
-			throw new TypeError 'expected parameter `z` to be a Number, passed ' + typeof z
+			throw new TypeError 'expected parameter `z` to be a Number, but was given a ' + typeof z
 		#END DEV
 
+		console.log a, rad a
+
 		# if angle was passed as a string, convert it to a float first
-		if not (a < Infinity)
-
-			_a = parseFloat a, 10
-
-			# convert deg -> rad?
-			if a.indexOf 'deg' > -1
-				_a *= Math.PI / 180
-
-			a = _a
+		a = rad a
 
 		@_data.transformations.rotate =
 			x: x
@@ -199,11 +216,11 @@ extend Matrix.prototype,
 
 		#DEV
 		if not (x < Infinity)
-			throw new TypeError 'expected parameter `x` to be a Number, passed ' + typeof x
+			throw new TypeError 'expected parameter `x` to be a Number, but was given a ' + typeof x
 		if not (y < Infinity)
-			throw new TypeError 'expected parameter `y` to be a Number, passed ' + typeof y
+			throw new TypeError 'expected parameter `y` to be a Number, but was given a ' + typeof y
 		if not (z < Infinity)
-			throw new TypeError 'expected parameter `z` to be a Number, passed ' + typeof z
+			throw new TypeError 'expected parameter `z` to be a Number, but was given a ' + typeof z
 		#END DEV
 
 		@_data.transformations.scale =
@@ -213,12 +230,8 @@ extend Matrix.prototype,
 
 	skew: fluent (x = 0, y = 0) ->
 
-		#DEV
-		if not (x < Infinity)
-			throw new TypeError 'expected parameter `x` to be a Number, passed ' + typeof x
-		if not (y < Infinity)
-			throw new TypeError 'expected parameter `y` to be a Number, passed ' + typeof y
-		#END DEV
+		x = rad x
+		y = rad y
 
 		@_data.transformations.skew =
 			x: x
@@ -228,11 +241,11 @@ extend Matrix.prototype,
 
 		#DEV
 		if not (x < Infinity)
-			throw new TypeError 'expected parameter `x` to be a Number, passed ' + typeof x
+			throw new TypeError 'expected parameter `x` to be a Number, but was given a ' + typeof x
 		if not (y < Infinity)
-			throw new TypeError 'expected parameter `y` to be a Number, passed ' + typeof y
+			throw new TypeError 'expected parameter `y` to be a Number, but was given a ' + typeof y
 		if not (z < Infinity)
-			throw new TypeError 'expected parameter `z` to be a Number, passed ' + typeof z
+			throw new TypeError 'expected parameter `z` to be a Number, but was given a ' + typeof z
 		#END DEV
 
 		@_data.transformations.translate =
