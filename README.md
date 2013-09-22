@@ -29,9 +29,6 @@ tranny = new Tranny
 
 tranny
 
-# parse a CSS string
-.parse 'skew(1.5rad) scale(0.5, 0.7)'
-
 # set some transforms
 .rotate '90deg'
 .translate3d 50, 100, 200
@@ -78,6 +75,10 @@ tranny.getMatrixCSS()
 - translateZ
 - translate3d
 
+## methods
+
+| matrix		| {Array}	| set the matrix		|
+
 ## see also
 
 - http://www.w3.org/TR/css3-transforms/#transform-functions
@@ -87,3 +88,7 @@ tranny.getMatrixCSS()
 - http://inside.mines.edu/~gmurray/ArbitraryAxisRotation/
 - http://stackoverflow.com/a/15208858/435124
 - http://desandro.github.io/3dtransforms/docs/perspective.html
+
+## todo
+
+- accept alternative units for scalars (%, em, pt, etc.)

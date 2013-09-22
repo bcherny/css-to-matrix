@@ -1,6 +1,6 @@
 
 
-izzy = require '../izzy'
+tranny = require '../tranny'
 
 subjects =
 	array: [],

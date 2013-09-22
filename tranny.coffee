@@ -6,7 +6,7 @@ umd = (factory) ->
 	else if typeof define is 'function' and define.amd
 		define([], factory)
 	else
-		@izzy = factory
+		@Tranny = factory
 
 # helpers
 copy = (array) ->
@@ -17,23 +17,25 @@ extend = (a, b) ->
 		a[key] = b[key]
 	a
 
-# default, untransformed matrix
-defaultMatrix = [
-	[1, 0, 0, 0],
-	[0, 1, 0, 0],
-	[0, 0, 1, 0],
-	[0, 0, 0, 1]
-]
+fluent = (fn) ->
+	->
+		fn.apply @, arguments
+		@
 
 # matrix
 Matrix = (data) ->
-	@setData data
+	if data then @setData data
 
 # methods
 extend Matrix.prototype,
 
 	_data:
-		matrix: copy defaultMatrix
+		matrix: [
+			[1, 0, 0, 0],
+			[0, 1, 0, 0],
+			[0, 0, 1, 0],
+			[0, 0, 0, 1]
+		]
 		transformations:
 			perspective: 0
 			rotate:
@@ -53,7 +55,40 @@ extend Matrix.prototype,
 				y: 0
 				z: 0
 
-	setData: (@_data) ->
+	setData: (data) ->
+
+		@_data.matrix = data
+
+	matrix: (data) ->
+
+		#DEV
+		if data.length is undefined
+			throw new TypeError 'expected parameter `data` to be an Array, passed ' + typeof data
+
+		rows = data.length
+		columns = if rows[0] then rows[0].length else 0
+
+		if rows isnt 4 or columns isnt 4
+			throw new Error 'expected parameter `data` to be a 4x4 matrix of arrays, passed ' + rows + 'x' + columns + ' matrix'
+		#END DEV
+
+		@setData data
+
+	getMatrix: ->
+
+		@apply()
+
+	getMatrixCSS: ->
+
+		matrix = @apply()
+		css = []
+
+		for row in matrix
+			for field in matrix
+				css.push field
+
+		# return
+		'matrix3d(' + css.join(',') + ')'
 
 	apply: ->
 
@@ -81,15 +116,15 @@ extend Matrix.prototype,
 		c = Math.cos a
 		i = 1 - c
 		rs = Math.sqrt(s)*Math.sin(a)
-		matrix[0][0] *= (u*u + (v*v + w*w)*c)/s
-		matrix[1][0] *= (u*v*i - w*rs)/s
-		matrix[2][0] *= (u*w*i + v*rs)/s
-		matrix[0][1] *= (u*v*i + w*rs)/s
-		matrix[1][1] *= (v*v + (u*u + w*w)*c)/s
-		matrix[2][1] *= (v*w*i - u*rs)/s
-		matrix[0][2] *= (u*w*i - v*rs)/s
-		matrix[1][2] *= (v*w*i + u*rs)/s
-		matrix[2][2] *= (w*w + (u*u + v*v)*c)/s
+		matrix[0][0] = (u*u + (v*v + w*w)*c)/s
+		matrix[1][0] = (u*v*i - w*rs)/s
+		matrix[2][0] = (u*w*i + v*rs)/s
+		matrix[0][1] = (u*v*i + w*rs)/s
+		matrix[1][1] = (v*v + (u*u + w*w)*c)/s
+		matrix[2][1] = (v*w*i - u*rs)/s
+		matrix[0][2] = (u*w*i - v*rs)/s
+		matrix[1][2] = (v*w*i + u*rs)/s
+		matrix[2][2] = (w*w + (u*u + v*v)*c)/s
 
 		# skew
 		skew = transformations.skew
@@ -105,26 +140,54 @@ extend Matrix.prototype,
 		matrix[1][1] *= scale.y
 		matrix[2][2] *= scale.z
 
+		# return
+		matrix
+
 	rotate: (a) -> @rotateZ a
 	rotateX: (a) -> @rotate3d 1, 0, 0, a
 	rotateY: (a) -> @rotate3d 0, 1, 0, a
 	rotateZ: (a) -> @rotate3d 0, 0, 1, a
 	scale: (x, y) -> @scale3d x, y
 	scaleX: (x) -> @scale3d x
-	scaleY: (y = 1) -> @_data.transformations.scale.y = y
-	scaleZ: (z = 1) -> @_data.transformations.scale.z = z
+	scaleY: fluent (y = 1) -> @_data.transformations.scale.y = y
+	scaleZ: fluent (z = 1) -> @_data.transformations.scale.z = z
 	skewX: (x) -> @skew x
-	skewY: (y = 0) -> @_data.transformations.skew.y = y
+	skewY: fluent (y = 0) -> @_data.transformations.skew.y = y
 	translate: (x, y) -> @translate3d x, y
 	translateX: (x) -> @translate3d x
-	translateY: (y = 0) -> @_data.transformations.translate.y = y
-	translateZ: (z = 0) -> @_data.transformations.translate.z = z
+	translateY: fluent (y = 0) -> @_data.transformations.translate.y = y
+	translateZ: fluent (z = 0) -> @_data.transformations.translate.z = z
 
-	perspective: (x = 0) ->
+	perspective: fluent (x = 0) ->
+
+		#DEV
+		if not (x < Infinity)
+			throw new TypeError 'expected parameter `x` to be a Number, passed ' + typeof x
+		#END DEV
 
 		@_data.transformations.perspective = x
 
-	rotate3d: (x = 0, y = 0, z = 0, a = 0) ->
+	rotate3d: fluent (x = 0, y = 0, z = 0, a = 0) ->
+
+		#DEV
+		if not (x < Infinity)
+			throw new TypeError 'expected parameter `x` to be a Number, passed ' + typeof x
+		if not (y < Infinity)
+			throw new TypeError 'expected parameter `y` to be a Number, passed ' + typeof y
+		if not (z < Infinity)
+			throw new TypeError 'expected parameter `z` to be a Number, passed ' + typeof z
+		#END DEV
+
+		# if angle was passed as a string, convert it to a float first
+		if not (a < Infinity)
+
+			_a = parseFloat a, 10
+
+			# convert deg -> rad?
+			if a.indexOf 'deg' > -1
+				_a *= Math.PI / 180
+
+			a = _a
 
 		@_data.transformations.rotate =
 			x: x
@@ -132,20 +195,45 @@ extend Matrix.prototype,
 			z: z
 			a: a
 
-	scale3d: (x = 1, y = 1, z = 1) ->
+	scale3d: fluent (x = 1, y = 1, z = 1) ->
+
+		#DEV
+		if not (x < Infinity)
+			throw new TypeError 'expected parameter `x` to be a Number, passed ' + typeof x
+		if not (y < Infinity)
+			throw new TypeError 'expected parameter `y` to be a Number, passed ' + typeof y
+		if not (z < Infinity)
+			throw new TypeError 'expected parameter `z` to be a Number, passed ' + typeof z
+		#END DEV
 
 		@_data.transformations.scale =
 			x: x
 			y: y
 			z: z
 
-	skew: (x = 0, y = 0) ->
+	skew: fluent (x = 0, y = 0) ->
+
+		#DEV
+		if not (x < Infinity)
+			throw new TypeError 'expected parameter `x` to be a Number, passed ' + typeof x
+		if not (y < Infinity)
+			throw new TypeError 'expected parameter `y` to be a Number, passed ' + typeof y
+		#END DEV
 
 		@_data.transformations.skew =
 			x: x
 			y: y
 
-	translate3d: (x = 0, y = 0, z = 0) ->
+	translate3d: fluent (x = 0, y = 0, z = 0) ->
+
+		#DEV
+		if not (x < Infinity)
+			throw new TypeError 'expected parameter `x` to be a Number, passed ' + typeof x
+		if not (y < Infinity)
+			throw new TypeError 'expected parameter `y` to be a Number, passed ' + typeof y
+		if not (z < Infinity)
+			throw new TypeError 'expected parameter `z` to be a Number, passed ' + typeof z
+		#END DEV
 
 		@_data.transformations.translate =
 			x: x
