@@ -27,7 +27,7 @@
 			background: blue;
 			left: 50%;
 			right: 0;
-			-webkit-transform: rotate(.5rad) translate3d(100px, 100px, 0);
+			-webkit-transform: rotate(.5rad) translate3d(100px, 100px, 0) skew(.5rad, 25deg);
 			/*
 			-webkit-transform: rotate(45deg) translate(100px, 100px) skew(.5rad, 25deg) scale(.1, .1);
 			*/
@@ -48,7 +48,7 @@
 	var t = new Tranny()
 		.translate(100, 100)
 		.rotate(.5)
-		// .skew(.5, '25deg')
+		.skew(.5, '25deg')
 		// .scale(.1, .1)
 
 	var css = t.getMatrixCSS();

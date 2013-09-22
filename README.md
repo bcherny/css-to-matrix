@@ -79,6 +79,10 @@ tranny.getMatrixCSS()
 
 | matrix		| {Array}	| set the matrix		|
 
+## why not use actual matricies?
+
+If you're performing caculations dozens of times per second (in the case of animations. 60 times per second), performance is essential. Not only do we need to be able to perform calculations for complex compound 3D transforms at 60FPS, but we need to leave head room for any precursor computations, as well as compositing and painting (ideally, the last two should take place on the GPU).
+
 ## see also
 
 - http://www.w3.org/TR/css3-transforms/#transform-functions
