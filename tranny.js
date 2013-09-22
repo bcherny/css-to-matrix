@@ -88,8 +88,8 @@
       css = [];
       for (_i = 0, _len = matrix.length; _i < _len; _i++) {
         row = matrix[_i];
-        for (_j = 0, _len1 = matrix.length; _j < _len1; _j++) {
-          field = matrix[_j];
+        for (_j = 0, _len1 = row.length; _j < _len1; _j++) {
+          field = row[_j];
           css.push(field);
         }
       }
@@ -106,6 +106,12 @@
       matrix[3][0] = translate.x;
       matrix[3][1] = translate.y;
       matrix[3][2] = translate.z;
+      skew = transformations.skew;
+      sx = Math.tan(skew.x);
+      sy = Math.tan(skew.y);
+      matrix[0][1] *= sy;
+      matrix[3][0] += translate.y * sx;
+      matrix[3][1] += translate.x * sy;
       rotate = transformations.rotate;
       u = rotate.x;
       v = rotate.y;
@@ -124,12 +130,6 @@
       matrix[0][2] = (u * w * i - v * rs) / s;
       matrix[1][2] = (v * w * i + u * rs) / s;
       matrix[2][2] = (w * w + (u * u + v * v) * c) / s;
-      skew = transformations.skew;
-      sx = Math.tan(skew.x);
-      sy = Math.tan(skew.y);
-      matrix[0][1] *= sy;
-      matrix[3][0] += translate.y * sx;
-      matrix[3][1] += translate.x * sy;
       scale = transformations.scale;
       matrix[0][0] *= scale.x;
       matrix[1][1] *= scale.y;

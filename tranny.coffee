@@ -84,7 +84,7 @@ extend Matrix.prototype,
 		css = []
 
 		for row in matrix
-			for field in matrix
+			for field in row
 				css.push field
 
 		# return
@@ -106,6 +106,14 @@ extend Matrix.prototype,
 		matrix[3][1] = translate.y
 		matrix[3][2] = translate.z
 
+		# skew
+		skew = transformations.skew
+		sx = Math.tan skew.x
+		sy = Math.tan skew.y
+		matrix[0][1] *= sy
+		matrix[3][0] += translate.y*sx
+		matrix[3][1] += translate.x*sy
+
 		# rotate (see http://inside.mines.edu/~gmurray/ArbitraryAxisRotation/)
 		rotate = transformations.rotate
 		u = rotate.x
@@ -125,14 +133,6 @@ extend Matrix.prototype,
 		matrix[0][2] = (u*w*i - v*rs)/s
 		matrix[1][2] = (v*w*i + u*rs)/s
 		matrix[2][2] = (w*w + (u*u + v*v)*c)/s
-
-		# skew
-		skew = transformations.skew
-		sx = Math.tan skew.x
-		sy = Math.tan skew.y
-		matrix[0][1] *= sy
-		matrix[3][0] += translate.y*sx
-		matrix[3][1] += translate.x*sy
 
 		# scale
 		scale = transformations.scale

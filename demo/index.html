@@ -4,17 +4,42 @@
 	
 	<meta charset="utf-8" />
 
+	<style>
+
+		* { border: 0; margin: 0; padding: 0 }
+
+		div {
+			background: orange;
+			height: 300px;
+			width: 300px;
+			position: absolute;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				top: 0;
+		}
+
+	</style>
+
 </head>
 <body>
+
+	<div></div>
 	
+	<script src="annie-0.1.3.js"></script>
 	<script src="../tranny.js"></script>
 	<script>
 
 	var t = new Tranny()
 		.rotate('45deg')
-		.translate3d(50, 100, 200);
+		.translate(100, 100);
 
-	console.log(t.getMatrixCSS());
+	var css = t.getMatrixCSS();
+	var div = document.getElementsByTagName('div')[0];
+
+	div.style[annie.transform] = css;
+
+	console.log(css);
 
 	</script>
 </body>
