@@ -150,7 +150,7 @@ extend Matrix.prototype,
 
 		if skew.x
 			tx = Math.tan skew.x
-			matrix[0][1] = tx
+			matrix[0][1] *= tx
 			# matrix[1][0] *= 1 + tx
 			# matrix[1][1] *= 1 + tx
 			# matrix[1][2] *= 1 + tx
@@ -158,8 +158,8 @@ extend Matrix.prototype,
 
 		if skew.y
 			ty = Math.tan skew.y
-			matrix[0][2] = ty
-			matrix[1][0] = ty
+			matrix[0][2] *= ty
+			matrix[1][0] *= ty
 			# matrix[0][0] *= 1 + ty
 			# matrix[0][1] *= 1 + ty
 			# matrix[0][2] *= 1 + ty

@@ -144,12 +144,12 @@
       skew = transformations.skew;
       if (skew.x) {
         tx = Math.tan(skew.x);
-        matrix[0][1] = tx;
+        matrix[0][1] *= tx;
       }
       if (skew.y) {
         ty = Math.tan(skew.y);
-        matrix[0][2] = ty;
-        matrix[1][0] = ty;
+        matrix[0][2] *= ty;
+        matrix[1][0] *= ty;
       }
       scale = transformations.scale;
       matrix[0][0] *= scale.x;

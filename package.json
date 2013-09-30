@@ -21,7 +21,10 @@
   },
   "license": "MIT",
   "readmeFilename": "README.md",
-  "dependencies": {},
+  "dependencies": {
+    "transform-to-matrix": "0.0.x",
+    "matrix-utilities": "~1.0.0"
+  },
   "scripts": {
     "test": "./node_modules/.bin/nodeunit test"
   },
