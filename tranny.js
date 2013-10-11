@@ -44,19 +44,33 @@
         }
       }
 
-      Matrix.prototype._data = {
-        matrix: new util.Identity,
-        transformations: {
-          perspective: new util.Identity,
-          rotate: new util.Identity,
-          scale: new util.Identity,
-          skew: new util.Identity,
-          translate: new util.Identity
-        }
-      };
+      Matrix.prototype.model = (function() {
+        var _data;
+        _data = {
+          matrix: new util.Identity,
+          transformations: {
+            perspective: new util.Identity,
+            rotate: new util.Identity,
+            scale: new util.Identity,
+            skew: new util.Identity,
+            translate: new util.Identity
+          }
+        };
+        return {
+          get: function(key) {
+            return _data[key];
+          },
+          set: function(key, value) {
+            return _data[key] = value;
+          },
+          setDeep: function(key, subKey, value) {
+            return _data[key][subKey] = value;
+          }
+        };
+      })();
 
       Matrix.prototype.setData = function(data) {
-        return this._data.matrix = data;
+        return this.model.set('matrix', data);
       };
 
       Matrix.prototype.matrix = function(data) {
@@ -92,8 +106,8 @@
 
       Matrix.prototype.apply = function() {
         var matrix, t;
-        matrix = new util.Identity;
-        t = this._data.transformations;
+        matrix = this.model.get('matrix');
+        t = this.model.get('transformations');
         matrix = util.multiply(matrix, t.perspective);
         matrix = util.multiply(matrix, t.translate);
         matrix = util.multiply(matrix, t.rotate);

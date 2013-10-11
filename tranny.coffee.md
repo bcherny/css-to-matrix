@@ -35,14 +35,14 @@ shallow object extend
 				a[key] = b[key]
 			a
 
-# fluent
+### fluent
 make functions return `this`, for easy chaining
 
 		fluent: (fn) ->
 			->
 				fn.apply @, arguments
 				@
-# tranny
+## tranny
 
 	Tranny = (toMatrix, util) ->
 
@@ -52,18 +52,26 @@ make functions return `this`, for easy chaining
 			
 				if data then @setData data
 
-			_data:
-				matrix: new util.Identity
-				transformations:
-					perspective: new util.Identity
-					rotate: new util.Identity
-					scale: new util.Identity
-					skew: new util.Identity
-					translate: new util.Identity
+default 
+
+			model: do ->
+
+				_data =
+					matrix: new util.Identity
+					transformations:
+						perspective: new util.Identity
+						rotate: new util.Identity
+						scale: new util.Identity
+						skew: new util.Identity
+						translate: new util.Identity
+
+				get: (key) -> _data[key]
+				set: (key, value) -> _data[key] = value
+				setDeep: (key, subKey, value) -> _data[key][subKey] = value
 
 			setData: (data) ->
 
-				@_data.matrix = data
+				@model.set 'matrix', data
 
 			matrix: (data) ->
 
@@ -98,8 +106,8 @@ make functions return `this`, for easy chaining
 
 			apply: ->
 
-				matrix = new util.Identity
-				t = @_data.transformations
+				matrix = @model.get 'matrix'
+				t = @model.get 'transformations'
 
 				# perspective
 				matrix = util.multiply matrix, t.perspective
