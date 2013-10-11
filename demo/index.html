@@ -27,10 +27,7 @@
 			background: blue;
 			left: 50%;
 			right: 0;
-			-webkit-transform: rotate(.5rad)  skew(.5rad, .5rad);
-			/*
-			-webkit-transform: rotate(45deg) translate(100px, 100px) skew(.5rad, 25deg) scale(.1, .1);
-			*/
+			-webkit-transform: translate(100px, 100px) rotate(45deg) skew(.5rad, 25deg) scale(.1, .1);
 		}
 
 	</style>
@@ -44,21 +41,19 @@
 	<script src="annie-0.1.3.js"></script>
 	<script src="../node_modules/matrix-utilities/matrix-utilities.js"></script>
 	<script src="../node_modules/transform-to-matrix/transform-to-matrix.js"></script>
-	<script src="../tranny2.js"></script>
+	<script src="../tranny.js"></script>
 	<script>
 
 	var t = new Tranny()
-		// .translate(100, 100)
-		.rotate(.5)
-		.skew(.5, .5)
-		// .scale(.1, .1)
+		.translate(100, 100)
+		.rotate('45deg')
+		.skew(.5, '25deg')
+		.scale(.1, .1)
 
 	var css = t.getMatrixCSS();
 	var div = document.getElementById('div1');
 
 	div.style[annie.transform] = css;
-
-	console.log(css);
 
 	</script>
 </body>
