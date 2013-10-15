@@ -1,56 +1,53 @@
 # Tranny
 
-## dependencies
-
-	umodel = require 'umodel'
+	wrap = (util, umodel, toMatrix) ->
 
 ## helpers
 
-	_ =
+		_ =
 
 ### rad
 convert strings like "55deg" or ".75rad" to floats (in radians)
 
-		rad: (string) ->
+			rad: (string) ->
 
-			if typeof string is 'string'
+				if typeof string is 'string'
 
-				angle = parseFloat string, 10
-				isDegrees = string.indexOf 'deg' > -1
+					angle = parseFloat string, 10
+					isDegrees = string.indexOf 'deg' > -1
 
-				# convert deg -> rad?
-				angle *= Math.PI / 180 if isDegrees
+					# convert deg -> rad?
+					angle *= Math.PI / 180 if isDegrees
 
-				string = angle
-			
-			string
+					string = angle
+				
+				string
 
 ### copy
 copies arrays
 
-		copy: (array) ->
-			array.slice()
+			copy: (array) ->
+				array.slice()
 
 ### extend
 shallow object extend
 
-		extend: (a, b) ->
-			for own key of b
-				a[key] = b[key]
-			a
+			extend: (a, b) ->
+				for own key of b
+					a[key] = b[key]
+				a
 
 ### fluent
 make functions return `this`, for easy chaining
 
-		fluent: (fn) ->
-			->
-				fn.apply @, arguments
-				@
+			fluent: (fn) ->
+				->
+					fn.apply @, arguments
+					@
+
 ## tranny
 
-	Tranny = (toMatrix, util) ->
-
-		class Matrix
+		class Tranny
 
 			constructor: (data) ->
 
@@ -71,6 +68,7 @@ default options
 					translate: new util.Identity
 
 ### matrix
+
 set matrix in model
 
 			matrix: (data) ->
@@ -107,7 +105,8 @@ get matrix formatted as a string that can be plugged right into CSS's `transform
 					for field in row
 						css.push field
 
-				# return
+return
+				
 				'matrix3d(' + css.join(',') + ')'
 
 ### apply
@@ -118,22 +117,28 @@ apply transformations as defined in the model
 				matrix = @model.get 'matrix'
 				t = @model.get 'transformations'
 
-				# perspective
+perspective
+
 				matrix = util.multiply matrix, t.perspective
 
-				# translate
+translate
+
 				matrix = util.multiply matrix, t.translate
 
-				# rotate
+rotate
+
 				matrix = util.multiply matrix, t.rotate
 
-				# skew
+skew
+
 				matrix = util.multiply matrix, t.skew
 
-				# scale
+scale
+
 				matrix = util.multiply matrix, t.scale
 
-				# return
+return
+
 				util.flip matrix
 
 ### transform functions
@@ -213,10 +218,12 @@ if angle was passed as a string, convert it to a float first
 	umd = (name, factory) ->
 
 		if typeof exports is 'object'
-			module.exports = factory require('transform-to-matrix'), require('matrix-utilities'), require('umodel')
-		else if typeof define is 'function' and define.amd
-			define name, ['transform-to-matrix', 'matrix-utilities', 'umodel'], (toMatrix, util, umodel) -> factory
-		else
-			@[name] = factory @['transform-to-matrix'], @['matrix-utilities'], @umodel
+			module.exports = factory require('matrix-utilities'), require('umodel'), require('transform-to-matrix')
 
-	umd 'Tranny', Tranny
+		else if typeof define is 'function' and define.amd
+			define name, ['matrix-utilities', 'umodel', 'transform-to-matrix'], factory
+
+		else
+			@[name] = factory @['matrix-utilities'], @['umodel'], @['transform-to-matrix']
+
+	umd 'Tranny', wrap
