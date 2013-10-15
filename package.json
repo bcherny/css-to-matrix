@@ -17,7 +17,8 @@
     "grunt": "~0.4.1",
     "grunt-contrib-uglify": "~0.2.4",
     "grunt-contrib-coffee": "~0.7.0",
-    "nodeunit": "~0.8.1"
+    "nodeunit": "~0.8.1",
+    "grunt-regex-replace": "~0.2.5"
   },
   "license": "MIT",
   "readmeFilename": "README.md",

@@ -25,8 +25,22 @@ module.exports = (grunt) ->
 						'tranny.js'
 					]
 
+		'regex-replace':
+
+			min:
+				src: ['tranny.min.js'],
+				actions: [
+					{
+						name: 'remove debug checks'
+						search: '####DEV(.+)####END DEV'
+						replace: ''
+						flags: 'gim'
+					}
+				]
+
 
 	grunt.loadNpmTasks 'grunt-contrib-coffee'
 	grunt.loadNpmTasks 'grunt-contrib-uglify'
+	grunt.loadNpmTasks 'grunt-regex-replace'
 
-	grunt.registerTask 'default', ['coffee', 'uglify']
+	grunt.registerTask 'default', ['coffee', 'uglify', 'regex-replace']
