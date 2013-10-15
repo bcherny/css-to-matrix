@@ -88,19 +88,12 @@ set matrix in model
 
 				@model.set 'matrix', data
 
-### getMatrix
-get calculated matrix
-
-			getMatrix: ->
-
-				@apply()
-
 ### getMatrixCSS
 get matrix formatted as a string that can be plugged right into CSS's `transform` function
 
 			getMatrixCSS: ->
 
-				matrix = @apply()
+				matrix = @getMatrix()
 				css = []
 
 				for row in matrix
@@ -111,10 +104,10 @@ return
 				
 				'matrix3d(' + css.join(',') + ')'
 
-### apply
-apply transformations as defined in the model
+### getMatrix
+apply transformations as defined in the model, and get back get calculated matrix
 
-			apply: ->
+			getMatrix: ->
 
 				matrix = @model.get 'matrix'
 				t = @model.get 'transformations'

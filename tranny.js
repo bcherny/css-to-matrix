@@ -65,13 +65,9 @@
         return this.model.set('matrix', data);
       };
 
-      Tranny.prototype.getMatrix = function() {
-        return this.apply();
-      };
-
       Tranny.prototype.getMatrixCSS = function() {
         var css, field, matrix, row, _i, _j, _len, _len1;
-        matrix = this.apply();
+        matrix = this.getMatrix();
         css = [];
         for (_i = 0, _len = matrix.length; _i < _len; _i++) {
           row = matrix[_i];
@@ -83,7 +79,7 @@
         return 'matrix3d(' + css.join(',') + ')';
       };
 
-      Tranny.prototype.apply = function() {
+      Tranny.prototype.getMatrix = function() {
         var matrix, t;
         matrix = this.model.get('matrix');
         t = this.model.get('transformations');
