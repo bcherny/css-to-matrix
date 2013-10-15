@@ -40,6 +40,26 @@
     });
   });
 
+  describe('getMatrix', function() {
+    return it('should properly apply transformations', function() {
+      var actual, expected, tranny;
+      tranny = new Tranny;
+      tranny.translate3d(10, 20, 30);
+      actual = tranny.getMatrix();
+      expected = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [10, 20, 30, 1]];
+      return expect(actual).to.deep.equal(expected);
+    });
+  });
+
+  describe('getMatrixCSS', function() {
+    return it('should convert matricies to CSS strings', function() {
+      var css, tranny;
+      tranny = new Tranny(data);
+      css = tranny.getMatrixCSS();
+      return expect(css).to.equal('matrix3d(1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16)');
+    });
+  });
+
   mocha.run();
 
 }).call(this);

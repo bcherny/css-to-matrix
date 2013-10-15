@@ -51,21 +51,21 @@ make functions return `this`, for easy chaining
 
 			constructor: (data) ->
 
+default options
+
+				@model = new umodel
+					matrix: new util.Identity
+					transformations:
+						perspective: new util.Identity
+						rotate: new util.Identity
+						scale: new util.Identity
+						skew: new util.Identity
+						translate: new util.Identity
+
 set data?
 			
 				if data
 					@matrix data
-
-default options
-
-			model: new umodel
-				matrix: new util.Identity
-				transformations:
-					perspective: new util.Identity
-					rotate: new util.Identity
-					scale: new util.Identity
-					skew: new util.Identity
-					translate: new util.Identity
 
 ### matrix
 
@@ -77,8 +77,6 @@ set matrix in model
 				if data.length is undefined
 					throw new TypeError 'expected parameter `data` to be an Array, but was given a ' + typeof data
 
-				console.log data
-
 				rows = data.length
 				columns = if rows > 0 then rows else 0
 
@@ -87,22 +85,6 @@ set matrix in model
 ####END DEV
 
 				@model.set 'matrix', data
-
-### getMatrixCSS
-get matrix formatted as a string that can be plugged right into CSS's `transform` function
-
-			getMatrixCSS: ->
-
-				matrix = @getMatrix()
-				css = []
-
-				for row in matrix
-					for field in row
-						css.push field
-
-return
-				
-				'matrix3d(' + css.join(',') + ')'
 
 ### getMatrix
 apply transformations as defined in the model, and get back get calculated matrix
@@ -135,6 +117,22 @@ scale
 return
 
 				util.flip matrix
+
+### getMatrixCSS
+get matrix formatted as a string that can be plugged right into CSS's `transform` function
+			
+			getMatrixCSS: ->
+
+				matrix = @getMatrix()
+				css = []
+
+				for row in matrix
+					for field in row
+						css.push field
+
+return
+				
+				'matrix3d(' + css.join(',') + ')'
 
 ### transform functions
 1-to-1 with their CSS equivalents

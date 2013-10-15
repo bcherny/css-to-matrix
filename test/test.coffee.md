@@ -40,6 +40,32 @@ setup
 
 			expect(fn).to.throw Error
 
+	describe 'getMatrix', ->
+
+		it 'should properly apply transformations', ->
+
+			tranny = new Tranny
+			tranny.translate3d 10, 20, 30
+
+			actual = tranny.getMatrix()
+			expected = [
+				[1, 0, 0, 0]
+				[0, 1, 0, 0]
+				[0, 0, 1, 0]
+				[10, 20, 30, 1]
+			]
+
+			expect(actual).to.deep.equal expected
+
+	describe 'getMatrixCSS', ->
+
+		it 'should convert matricies to CSS strings', ->
+
+			tranny = new Tranny data
+			css = tranny.getMatrixCSS()
+
+			expect(css).to.equal 'matrix3d(1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16)'
+
 run
 
 	mocha.run()

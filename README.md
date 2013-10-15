@@ -1,7 +1,5 @@
 # tranny
 
-*Pre-alpha - not yet functional*
-
 A little library for converting compound CSS transforms into their matrix equivalents.
 
 ## usage
@@ -11,11 +9,11 @@ A little library for converting compound CSS transforms into their matrix equiva
 # using the default matrix
 new Tranny
 
-# or using a custom 4x4 matrix (meaning some transformation/s are already applied)
+# or using a custom 4x4 matrix (meaning some transformations are already applied)
 matrix = [
-	[1, 2, 3, 4],
-	[5, 6, 7, 8],
-	[9, 0, 1, 2],
+	[1, 2, 3, 4]
+	[5, 6, 7, 8]
+	[9, 0, 1, 2]
 	[3, 4, 5, 6]
 ]
 new Tranny matrix
@@ -51,6 +49,15 @@ tranny.getMatrixCSS()
 ###
 	"matrix3d(9.870993963020204, 0.7, 0, 0, -0.5, 0, 0, 0, 0, 0, 1, 0, 443.54969815101026, 35, 200, 1)"
 ###
+
+# set a new base matrix (on the basis of which transforms are applied)
+tranny.matrix [
+	[3, 1, 4, 1]
+	[5, 9, 2, 6]
+	[5, 3, 5, 8]
+	[9, 7, 9, 3]
+]
+
 ```
 
 ## supported transforms
@@ -75,13 +82,9 @@ tranny.getMatrixCSS()
 - translateZ
 - translate3d
 
-## methods
-
-| matrix		| {Array}	| set the matrix		|
-
 ## why not use actual matricies?
 
-If you're performing caculations dozens of times per second (in the case of animations. 60 times per second), performance is essential. Not only do we need to be able to perform calculations for complex compound 3D transforms at 60FPS, but we need to leave head room for any precursor computations, as well as compositing and painting (ideally, the last two should take place on the GPU).
+If you're performing caculations dozens of times per second (in the case of animations. 60 times per second), performance is essential. Not only do we need to be able to perform calculations for complex compound 3D transforms at 60FPS, but we need to leave head room for any precursor computations, as well as compositing and painting (ideally, the last two should take place on the GPU). Performing the calculations ourselves (instead of leaving it to the CSS engine) gives us finer control over where (CPU vs. GPU, this thread vs. a WebWorker, sync vs. async) and when (precomputed, partially applied, realtime) computation occurs.
 
 ## see also
 

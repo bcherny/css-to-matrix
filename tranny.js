@@ -38,31 +38,41 @@
     };
     return Tranny = (function() {
       function Tranny(data) {
+        this.model = new umodel({
+          matrix: new util.Identity,
+          transformations: {
+            perspective: new util.Identity,
+            rotate: new util.Identity,
+            scale: new util.Identity,
+            skew: new util.Identity,
+            translate: new util.Identity
+          }
+        });
         if (data) {
           this.matrix(data);
         }
       }
 
-      Tranny.prototype.model = new umodel({
-        matrix: new util.Identity,
-        transformations: {
-          perspective: new util.Identity,
-          rotate: new util.Identity,
-          scale: new util.Identity,
-          skew: new util.Identity,
-          translate: new util.Identity
-        }
-      });
-
       Tranny.prototype.matrix = function(data) {
         var columns, rows;
-        console.log(data);
         rows = data.length;
         columns = rows > 0 ? rows : 0;
         if (rows !== 4 || columns !== 4) {
           throw new Error('expected parameter `data` to be a 4x4 matrix of arrays, but was given a ' + rows + 'x' + columns + ' matrix');
         }
         return this.model.set('matrix', data);
+      };
+
+      Tranny.prototype.getMatrix = function() {
+        var matrix, t;
+        matrix = this.model.get('matrix');
+        t = this.model.get('transformations');
+        matrix = util.multiply(matrix, t.perspective);
+        matrix = util.multiply(matrix, t.translate);
+        matrix = util.multiply(matrix, t.rotate);
+        matrix = util.multiply(matrix, t.skew);
+        matrix = util.multiply(matrix, t.scale);
+        return util.flip(matrix);
       };
 
       Tranny.prototype.getMatrixCSS = function() {
@@ -77,18 +87,6 @@
           }
         }
         return 'matrix3d(' + css.join(',') + ')';
-      };
-
-      Tranny.prototype.getMatrix = function() {
-        var matrix, t;
-        matrix = this.model.get('matrix');
-        t = this.model.get('transformations');
-        matrix = util.multiply(matrix, t.perspective);
-        matrix = util.multiply(matrix, t.translate);
-        matrix = util.multiply(matrix, t.rotate);
-        matrix = util.multiply(matrix, t.skew);
-        matrix = util.multiply(matrix, t.scale);
-        return util.flip(matrix);
       };
 
       Tranny.prototype.rotate = function(a) {
