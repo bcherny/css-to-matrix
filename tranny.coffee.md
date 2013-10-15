@@ -77,8 +77,10 @@ set matrix in model
 				if data.length is undefined
 					throw new TypeError 'expected parameter `data` to be an Array, but was given a ' + typeof data
 
+				console.log data
+
 				rows = data.length
-				columns = if rows[0] then rows[0].length else 0
+				columns = if rows > 0 then rows else 0
 
 				if rows isnt 4 or columns isnt 4
 					throw new Error 'expected parameter `data` to be a 4x4 matrix of arrays, but was given a ' + rows + 'x' + columns + ' matrix'

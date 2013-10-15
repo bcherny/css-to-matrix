@@ -56,8 +56,9 @@
 
       Tranny.prototype.matrix = function(data) {
         var columns, rows;
+        console.log(data);
         rows = data.length;
-        columns = rows[0] ? rows[0].length : 0;
+        columns = rows > 0 ? rows : 0;
         if (rows !== 4 || columns !== 4) {
           throw new Error('expected parameter `data` to be a 4x4 matrix of arrays, but was given a ' + rows + 'x' + columns + ' matrix');
         }
