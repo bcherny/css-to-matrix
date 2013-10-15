@@ -23,7 +23,8 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "transform-to-matrix": "0.0.x",
-    "matrix-utilities": "~1.0.0"
+    "matrix-utilities": "~1.0.0",
+    "umodel": "0.0.2"
   },
   "scripts": {
     "test": "./node_modules/.bin/nodeunit test"
