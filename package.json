@@ -1,6 +1,6 @@
 {
   "name": "tranny",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A little library for converting compound CSS transforms into their matrix equivalents",
   "repository": {
     "type": "git",
@@ -30,5 +30,6 @@
   "scripts": {
     "test": "./node_modules/.bin/nodeunit test"
   },
-  "keywords": []
+  "keywords": ["transform", "3d", "css", "matrix", "identity", "multiply", "css3"],
+  "main": "tranny.js"
 }
