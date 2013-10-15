@@ -198,15 +198,6 @@
         if (z == null) {
           z = 1;
         }
-        if (!(x < Infinity)) {
-          throw new TypeError('expected parameter `x` to be a Number, but was given a ' + typeof x);
-        }
-        if (!(y < Infinity)) {
-          throw new TypeError('expected parameter `y` to be a Number, but was given a ' + typeof y);
-        }
-        if (!(z < Infinity)) {
-          throw new TypeError('expected parameter `z` to be a Number, but was given a ' + typeof z);
-        }
         return this.model.set('transformations/scale', toMatrix.scale3d(x, y, z));
       });
 
@@ -230,15 +221,6 @@
         if (z == null) {
           z = 0;
         }
-        if (!(x < Infinity)) {
-          throw new TypeError('expected parameter `x` to be a Number, but was given a ' + typeof x);
-        }
-        if (!(y < Infinity)) {
-          throw new TypeError('expected parameter `y` to be a Number, but was given a ' + typeof y);
-        }
-        if (!(z < Infinity)) {
-          throw new TypeError('expected parameter `z` to be a Number, but was given a ' + typeof z);
-        }
         return this.model.set('transformations/translate', toMatrix.translate3d(x, y, z));
       });
 
@@ -247,18 +229,18 @@
     })();
   };
 
-  umd = function(factory) {
+  umd = function(name, factory) {
     if (typeof exports === 'object') {
       return module.exports = factory(require('transform-to-matrix'), require('matrix-utilities'), require('umodel'));
     } else if (typeof define === 'function' && define.amd) {
-      return define('Tranny', ['transform-to-matrix', 'matrix-utilities', 'umodel'], function(toMatrix, util, umodel) {
+      return define(name, ['transform-to-matrix', 'matrix-utilities', 'umodel'], function(toMatrix, util, umodel) {
         return factory;
       });
     } else {
-      return this.Tranny = factory(this['transform-to-matrix'], this['matrix-utilities'], this.umodel);
+      return this[name] = factory(this['transform-to-matrix'], this['matrix-utilities'], this.umodel);
     }
   };
 
-  umd(Tranny);
+  umd('Tranny', Tranny);
 
 }).call(this);

@@ -110,6 +110,9 @@ get matrix formatted as a string that can be plugged right into CSS's `transform
 				# return
 				'matrix3d(' + css.join(',') + ')'
 
+### apply
+apply transformations as defined in the model
+
 			apply: ->
 
 				matrix = @model.get 'matrix'
@@ -132,6 +135,9 @@ get matrix formatted as a string that can be plugged right into CSS's `transform
 
 				# return
 				util.flip matrix
+
+### transform functions
+1-to-1 with their CSS equivalents
 
 			rotate: (a) -> @rotateZ a
 			rotateX: (a) -> @rotate3d 1, 0, 0, a
@@ -174,14 +180,14 @@ if angle was passed as a string, convert it to a float first
 
 			scale3d: _.fluent (x = 1, y = 1, z = 1) ->
 
-				#DEV
+####DEV
 				if not (x < Infinity)
 					throw new TypeError 'expected parameter `x` to be a Number, but was given a ' + typeof x
 				if not (y < Infinity)
 					throw new TypeError 'expected parameter `y` to be a Number, but was given a ' + typeof y
 				if not (z < Infinity)
 					throw new TypeError 'expected parameter `z` to be a Number, but was given a ' + typeof z
-				#END DEV
+####END DEV
 
 				@model.set 'transformations/scale', toMatrix.scale3d x, y, z
 
@@ -191,25 +197,26 @@ if angle was passed as a string, convert it to a float first
 
 			translate3d: _.fluent (x = 0, y = 0, z = 0) ->
 
-				#DEV
+####DEV
 				if not (x < Infinity)
 					throw new TypeError 'expected parameter `x` to be a Number, but was given a ' + typeof x
 				if not (y < Infinity)
 					throw new TypeError 'expected parameter `y` to be a Number, but was given a ' + typeof y
 				if not (z < Infinity)
 					throw new TypeError 'expected parameter `z` to be a Number, but was given a ' + typeof z
-				#END DEV
+####END DEV
 
 				@model.set 'transformations/translate', toMatrix.translate3d x, y, z
 
-	# UMD (play nice with AMD, CommonJS, globals)
-	umd = (factory) ->
+## UMD export (play nice with AMD, CommonJS, globals)
+
+	umd = (name, factory) ->
 
 		if typeof exports is 'object'
 			module.exports = factory require('transform-to-matrix'), require('matrix-utilities'), require('umodel')
 		else if typeof define is 'function' and define.amd
-			define 'Tranny', ['transform-to-matrix', 'matrix-utilities', 'umodel'], (toMatrix, util, umodel) -> factory
+			define name, ['transform-to-matrix', 'matrix-utilities', 'umodel'], (toMatrix, util, umodel) -> factory
 		else
-			@Tranny = factory @['transform-to-matrix'], @['matrix-utilities'], @umodel
+			@[name] = factory @['transform-to-matrix'], @['matrix-utilities'], @umodel
 
-	umd Tranny
+	umd 'Tranny', Tranny
