@@ -520,26 +520,25 @@
     };
     return Tranny = (function() {
       function Tranny(data) {
+        this.model = new umodel({
+          matrix: new util.Identity,
+          transformations: {
+            perspective: new util.Identity,
+            rotate: new util.Identity,
+            scale: new util.Identity,
+            skew: new util.Identity,
+            translate: new util.Identity
+          }
+        });
         if (data) {
           this.matrix(data);
         }
       }
 
-      Tranny.prototype.model = new umodel({
-        matrix: new util.Identity,
-        transformations: {
-          perspective: new util.Identity,
-          rotate: new util.Identity,
-          scale: new util.Identity,
-          skew: new util.Identity,
-          translate: new util.Identity
-        }
-      });
-
       Tranny.prototype.matrix = function(data) {
         var columns, rows;
         rows = data.length;
-        columns = rows[0] ? rows[0].length : 0;
+        columns = rows > 0 ? rows : 0;
         if (rows !== 4 || columns !== 4) {
           throw new Error('expected parameter `data` to be a 4x4 matrix of arrays, but was given a ' + rows + 'x' + columns + ' matrix');
         }
@@ -547,24 +546,6 @@
       };
 
       Tranny.prototype.getMatrix = function() {
-        return this.apply();
-      };
-
-      Tranny.prototype.getMatrixCSS = function() {
-        var css, field, matrix, row, _i, _j, _len, _len1;
-        matrix = this.apply();
-        css = [];
-        for (_i = 0, _len = matrix.length; _i < _len; _i++) {
-          row = matrix[_i];
-          for (_j = 0, _len1 = row.length; _j < _len1; _j++) {
-            field = row[_j];
-            css.push(field);
-          }
-        }
-        return 'matrix3d(' + css.join(',') + ')';
-      };
-
-      Tranny.prototype.apply = function() {
         var matrix, t;
         matrix = this.model.get('matrix');
         t = this.model.get('transformations');
@@ -574,6 +555,20 @@
         matrix = util.multiply(matrix, t.skew);
         matrix = util.multiply(matrix, t.scale);
         return util.flip(matrix);
+      };
+
+      Tranny.prototype.getMatrixCSS = function() {
+        var css, field, matrix, row, _i, _j, _len, _len1;
+        matrix = this.getMatrix();
+        css = [];
+        for (_i = 0, _len = matrix.length; _i < _len; _i++) {
+          row = matrix[_i];
+          for (_j = 0, _len1 = row.length; _j < _len1; _j++) {
+            field = row[_j];
+            css.push(field);
+          }
+        }
+        return 'matrix3d(' + css.join(',') + ')';
       };
 
       Tranny.prototype.rotate = function(a) {
