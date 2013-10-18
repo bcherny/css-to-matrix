@@ -1,6 +1,6 @@
 {
   "name": "tranny",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A little library for converting compound CSS transforms into their matrix equivalents",
   "repository": {
     "type": "git",
@@ -44,14 +44,51 @@
   "testling": {
     "files": "test/test.js",
     "browsers": {
-      "ie": [ 6, 7, 8, 9 ],
-      "firefox": [ "nightly", 24, 23, 22, 21, 20 ],
-      "chrome": [ "canary", 30, 25, 20, 15, 10 ],
-      "safari": [ 6, 5, 4, 3 ],
-      "opera": [ "next", 16, 15, 14, 13, 12 ],
-      "iphone": [ 6 ],
-      "ipad": [ 6 ],
-      "android": [ 4 ]
+      "ie": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "firefox": [
+        "nightly",
+        24,
+        23,
+        22,
+        21,
+        20
+      ],
+      "chrome": [
+        "canary",
+        30,
+        25,
+        20,
+        15,
+        10
+      ],
+      "safari": [
+        6,
+        5,
+        4,
+        3
+      ],
+      "opera": [
+        "next",
+        16,
+        15,
+        14,
+        13,
+        12
+      ],
+      "iphone": [
+        6
+      ],
+      "ipad": [
+        6
+      ],
+      "android": [
+        4
+      ]
     }
   }
 }
