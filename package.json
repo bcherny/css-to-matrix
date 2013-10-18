@@ -24,8 +24,8 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-    "transform-to-matrix": "0.0.x",
-    "matrix-utilities": "~1.0.0",
+    "transform_to_matrix": "0.0.x",
+    "matrixutilities": "~1.0.0",
     "umodel": "0.0.2"
   },
   "scripts": {
