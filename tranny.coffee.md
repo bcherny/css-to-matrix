@@ -211,12 +211,12 @@ if angle was passed as a string, convert it to a float first
 	umd = (name, factory) ->
 
 		if typeof exports is 'object'
-			module.exports = factory require('matrix-utilities'), require('umodel'), require('transform-to-matrix')
+			module.exports = factory require('matrixutilities'), require('umodel'), require('transform_to_matrix')
 
 		else if typeof define is 'function' and define.amd
-			define name, ['matrix-utilities', 'umodel', 'transform-to-matrix'], factory
+			define name, ['matrixutilities', 'umodel', 'transform_to_matrix'], factory
 
 		else
-			@[name] = factory @['matrix-utilities'], @['umodel'], @['transform-to-matrix']
+			@[name] = factory @['matrixutilities'], @['umodel'], @['transform_to_matrix']
 
 	umd 'Tranny', wrap
