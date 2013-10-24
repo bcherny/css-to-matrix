@@ -1,6 +1,6 @@
 {
   "name": "tranny",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "A little library for converting compound CSS transforms into their matrix equivalents",
   "repository": {
     "type": "git",
@@ -24,9 +24,9 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-    "transform_to_matrix": "0.0.x",
-    "matrixutilities": "~1.0.0",
-    "umodel": "0.0.2"
+    "transform-to-matrix": "0.0.x",
+    "matrix-utilities": "1.2.x",
+    "umodel": "0.0.x"
   },
   "scripts": {
     "test": "./node_modules/.bin/nodeunit test"
