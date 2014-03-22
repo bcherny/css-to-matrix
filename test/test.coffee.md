@@ -1,6 +1,6 @@
 setup
 
-	Tranny = window.Tranny
+	Puppy = window.Puppy
 	expect = chai.expect
 	div = document.getElementById 'test'
 	precision = 100000
@@ -19,8 +19,8 @@ setup
 
 		it 'adds data that is passed when intialized to its model', ->
 
-			tranny = new Tranny data
-			actual = tranny.model.get 'matrix'
+			puppy = new Puppy data
+			actual = puppy.model.get 'matrix'
 
 			expect(actual).to.deep.equal data
 
@@ -28,15 +28,15 @@ setup
 
 		it 'should add valid data to its instance model', ->
 
-			tranny = new Tranny
-			tranny.matrix data
-			actual = tranny.model.get 'matrix'
+			puppy = new Puppy
+			puppy.matrix data
+			actual = puppy.model.get 'matrix'
 
 			expect(actual).to.deep.equal data
 
 		it 'should throw an error when intialized with an invalid array', ->
 
-			fn = -> new Tranny 'bad'
+			fn = -> new Puppy 'bad'
 
 			expect(fn).to.throw Error
 
@@ -44,10 +44,10 @@ setup
 
 		it 'should properly apply transformations', ->
 
-			tranny = new Tranny
-			tranny.translate3d 10, 20, 30
+			puppy = new Puppy
+			puppy.translate3d 10, 20, 30
 
-			actual = tranny.getMatrix()
+			actual = puppy.getMatrix()
 			expected = [
 				[1, 0, 0, 0]
 				[0, 1, 0, 0]
@@ -61,8 +61,8 @@ setup
 
 		it 'should convert matricies to CSS strings', ->
 
-			tranny = new Tranny data
-			css = tranny.getMatrixCSS()
+			puppy = new Puppy data
+			css = puppy.getMatrixCSS()
 
 			expect(css).to.equal 'matrix3d(1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16)'
 
