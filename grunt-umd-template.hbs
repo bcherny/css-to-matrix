@@ -1,0 +1,14 @@
+(function(root, factory) {
+    if(typeof exports === 'object') {
+        module.exports = factory(require('transform-to-matrix'), require('matrix-utilities'), require('umodel'));
+    }
+    else if(typeof define === 'function' && define.amd) {
+        define('css-to-matrix', ['transform-to-matrix', 'matrix-utilities', 'umodel'], factory);
+    }
+    else {
+        root['css-to-matrix'] = factory(root['transform-to-matrix'], root['matrix-utilities'], root.umodel);
+    }
+}(this, function(transformToMatrix, matrixUtilities, umodel) {
+{{{code}}}
+    return {{objectToExport}};
+}));

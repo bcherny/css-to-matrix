@@ -1,0 +1,4 @@
+demo/
+test/
+grunt-umd-template.hbs
+Gruntfile.coffee

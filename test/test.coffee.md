@@ -1,6 +1,6 @@
 setup
 
-	Tranny = window.Tranny
+	CssToMatrix = window['css-to-matrix']
 	expect = chai.expect
 	div = document.getElementById 'test'
 	precision = 100000
@@ -19,8 +19,8 @@ setup
 
 		it 'adds data that is passed when intialized to its model', ->
 
-			tranny = new Tranny data
-			actual = tranny.model.get 'matrix'
+			cssToMatrix = new CssToMatrix data
+			actual = cssToMatrix.model.get 'matrix'
 
 			expect(actual).to.deep.equal data
 
@@ -28,15 +28,15 @@ setup
 
 		it 'should add valid data to its instance model', ->
 
-			tranny = new Tranny
-			tranny.matrix data
-			actual = tranny.model.get 'matrix'
+			cssToMatrix = new CssToMatrix
+			cssToMatrix.matrix data
+			actual = cssToMatrix.model.get 'matrix'
 
 			expect(actual).to.deep.equal data
 
 		it 'should throw an error when intialized with an invalid array', ->
 
-			fn = -> new Tranny 'bad'
+			fn = -> new CssToMatrix 'bad'
 
 			expect(fn).to.throw Error
 
@@ -44,10 +44,10 @@ setup
 
 		it 'should properly apply transformations', ->
 
-			tranny = new Tranny
-			tranny.translate3d 10, 20, 30
+			cssToMatrix = new CssToMatrix
+			cssToMatrix.translate3d 10, 20, 30
 
-			actual = tranny.getMatrix()
+			actual = cssToMatrix.getMatrix()
 			expected = [
 				[1, 0, 0, 0]
 				[0, 1, 0, 0]
@@ -61,8 +61,8 @@ setup
 
 		it 'should convert matricies to CSS strings', ->
 
-			tranny = new Tranny data
-			css = tranny.getMatrixCSS()
+			cssToMatrix = new CssToMatrix data
+			css = cssToMatrix.getMatrixCSS()
 
 			expect(css).to.equal 'matrix3d(1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16)'
 

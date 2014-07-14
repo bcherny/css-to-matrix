@@ -42,19 +42,20 @@
 	<script src="../node_modules/matrix-utilities/matrix-utilities.js"></script>
 	<script src="../node_modules/transform-to-matrix/transform-to-matrix.js"></script>
 	<script src="../node_modules/umodel/umodel.js"></script>
-	<script src="../tranny.js"></script>
+	<script src="../dist/css-to-matrix.js"></script>
 	<script>
 
-	var t = new Tranny()
+	const CssToMatrix = window['css-to-matrix']
+
+	var t = new CssToMatrix()
 		.translate(100, 100)
 		.rotate('45deg')
 		.skew(.5, '25deg')
 		.scale(.1, .1)
 
-	var css = t.getMatrixCSS();
-	var div = document.getElementById('div1');
-
-	div.style[annie.transform] = css;
+	document
+		.getElementById('div1')
+		.style[annie.transform] = t.getMatrixCSS()
 
 	</script>
 </body>

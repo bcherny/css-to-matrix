@@ -1,0 +1,8 @@
+{
+	"eqnull": true,
+	"esnext": true,
+	"laxbreak": true,
+	"laxcomma": true,
+	"asi": true,
+	"smarttabs": true
+}

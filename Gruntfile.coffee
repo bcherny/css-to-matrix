@@ -1,12 +1,24 @@
+changeCase = require 'change-case'
+
 module.exports = (grunt) ->
+
+	nameParts = __dirname.split '/'
+	name = nameParts[nameParts.length - 1]
+	pkg = grunt.file.readJSON 'package.json'
+	deps = grunt.util._.keys pkg.dependencies
+
+	build = ['concat', 'regex-replace', 'umd', 'uglify']
+	test = ['coffee:test']
 
 	grunt.config.init
 
+		pkg: pkg
+
 		coffee:
 
-			compile:
+			test:
 				files:
-					'tranny.js': 'tranny.coffee'
+					'test/test.js': 'test/test.coffee.md'
 
 		uglify:
 
@@ -19,47 +31,71 @@ module.exports = (grunt) ->
 					join_vars: true
 				comments: false
 
-			standard:
-				files:
-					'tranny.min.js': [
-						'tranny.js'
-					]
-
 			standalone:
 				files:
-					'tranny.standalone.min.js': [
-						'tranny.standalone.js'
+					'dist/<%= pkg.name %>.standalone.min.js': [
+						'dist/<%= pkg.name %>.standalone.js'
+					]
+					'dist/<%= pkg.name %>.min.js': [
+						'src/<%= pkg.name %>.js'
 					]
 
 		concat:
 
+			standard:
+				src: 'src/<%= pkg.name %>.js'
+				dest: 'dist/<%= pkg.name %>.js'
+
 			standalone:
 				src: [
-					'node_modules/annie/annie.js'
 					'node_modules/matrix-utilities/matrix-utilities.js'
 					'node_modules/transform-to-matrix/transform-to-matrix.js'
 					'node_modules/umodel/umodel.js'
-					'tranny.js'
+					'src/<%= pkg.name %>.js'
 				]
-				dest: 'tranny.standalone.js'
+				dest: 'dist/<%= pkg.name %>.standalone.js'
 
 		'regex-replace':
 
 			min:
-				src: ['tranny.min.js', 'tranny.standalone.min.js'],
+				src: ['dist/<%= pkg.name %>.min.js', 'dist/<%= pkg.name %>.standalone.min.js'],
 				actions: [
 					{
 						name: 'remove debug checks'
-						search: '####DEV(.+)####END DEV'
+						search: '////DEV(.+)////END DEV'
 						replace: ''
 						flags: 'gim'
 					}
 				]
 
+		watch:
 
-	grunt.loadNpmTasks 'grunt-contrib-coffee'
-	grunt.loadNpmTasks 'grunt-contrib-concat'
-	grunt.loadNpmTasks 'grunt-contrib-uglify'
-	grunt.loadNpmTasks 'grunt-regex-replace'
+			test:
+				files: './test/*'
+				tasks: test
+				options:
+					interrupt: true
+					spawn: false
 
-	grunt.registerTask 'default', ['coffee', 'concat', 'uglify', 'regex-replace']
+		umd:
+			all:
+				src: './dist/' + name + '.js'
+				objectToExport: changeCase.pascalCase name
+				amdModuleId: name
+				globalAlias: name
+				deps:
+					default: deps
+				template: 'grunt-umd-template.hbs'
+
+
+	[
+		'grunt-contrib-coffee'
+		'grunt-contrib-concat'
+		'grunt-contrib-watch'
+		'grunt-contrib-uglify'
+		'grunt-regex-replace'
+		'grunt-umd'
+	].forEach grunt.loadNpmTasks
+
+	grunt.registerTask 'default', build
+	grunt.registerTask 'test', test
